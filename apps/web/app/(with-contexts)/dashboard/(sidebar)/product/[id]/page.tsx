@@ -55,7 +55,6 @@ import MetricCard from "./metric-card";
 import { useToast, Tooltip as TooltipCL } from "@courselit/components-library";
 import { useActivities } from "@/hooks/use-activities";
 import { Constants, UIConstants } from "@courselit/common-models";
-import Resources from "@components/resources";
 import { TIME_RANGES } from "@ui-config/constants";
 const { permissions } = UIConstants;
 
@@ -421,7 +420,8 @@ export default function DashboardPage() {
                 </Card>
             </div> */}
 
-            <Resources
+            {/* Resources section removed for this project */}
+            {/* <Resources
                 links={[
                     {
                         href: `https://docs.courselit.app/en/courses/add-content/`,
@@ -432,7 +432,7 @@ export default function DashboardPage() {
                         text: "Understanding product dashboard",
                     },
                 ]}
-            />
+            /> */}
         </DashboardContent>
     );
 }
