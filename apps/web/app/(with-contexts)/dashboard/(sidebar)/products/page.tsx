@@ -51,7 +51,6 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { EmptyState } from "@/app/(with-contexts)/(with-layout)/products/empty-state";
-import Resources from "@components/resources";
 import { SkeletonCard } from "@components/skeleton-card";
 
 const ITEMS_PER_PAGE = 9;
@@ -263,7 +262,8 @@ export default function Page() {
                 />
             )}
 
-            <Resources
+            {/* Resources section removed for this project */}
+            {/* <Resources
                 links={[
                     {
                         href: "https://docs.courselit.app/en/courses/introduction/",
@@ -274,7 +274,7 @@ export default function Page() {
                         text: "Create a digital download",
                     },
                 ]}
-            />
+            /> */}
         </DashboardContent>
     );
 }
