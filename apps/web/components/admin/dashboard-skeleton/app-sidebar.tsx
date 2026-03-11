@@ -1,17 +1,6 @@
 "use client";
 
-import {
-    Box,
-    Globe,
-    LibraryBig,
-    LifeBuoy,
-    Mail,
-    MessageCircleHeart,
-    Settings,
-    Target,
-    Text,
-    Users,
-} from "lucide-react";
+import { Box, LibraryBig, Settings, Target, Text, Users } from "lucide-react";
 
 import { NavMain } from "@components/admin/dashboard-skeleton/nav-main";
 import { NavProjects } from "@components/admin/dashboard-skeleton/nav-projects";
@@ -32,25 +21,16 @@ import { ProfileContext, SiteInfoContext } from "@components/contexts";
 import { checkPermission } from "@courselit/utils";
 import { Profile, UIConstants } from "@courselit/common-models";
 import {
-    GET_SET_UP,
     MY_CONTENT_HEADER,
     SIDEBAR_MENU_BLOGS,
-    SIDEBAR_MENU_MAILS,
-    SIDEBAR_MENU_PAGES,
     SIDEBAR_MENU_SETTINGS,
     SIDEBAR_MENU_USERS,
-    SITE_CUSTOMISATIONS_SETTING_HEADER,
-    SITE_MISCELLANEOUS_SETTING_HEADER,
     SITE_SETTINGS_SECTION_GENERAL,
-    SITE_SETTINGS_SECTION_MAILS,
-    SITE_SETTINGS_SECTION_PAYMENT,
 } from "@ui-config/strings";
 import { NavSecondary } from "./nav-secondary";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ComponentProps, useContext, useEffect, useState } from "react";
-import { CircularProgress } from "@components/circular-progress";
 import { hasPermissionToAccessSetupChecklist } from "@/lib/utils";
-import { ADMIN_PERMISSIONS } from "@ui-config/constants";
 import { getSetupChecklist } from "@/app/(with-contexts)/dashboard/(sidebar)/action";
 const { permissions } = UIConstants;
 
@@ -166,16 +146,17 @@ function getSidebarItems({
             items: [],
         });
     }
-    if (checkPermission(profile.permissions!, [permissions.manageCommunity])) {
-        navMainItems.push({
-            title: "Communities",
-            beta: true,
-            url: "/dashboard/communities",
-            icon: MessageCircleHeart,
-            isActive: path === "/dashboard/communities",
-            items: [],
-        });
-    }
+    // Communities menu entry commented out for this project
+    // if (checkPermission(profile.permissions!, [permissions.manageCommunity])) {
+    //     navMainItems.push({
+    //         title: "Communities",
+    //         beta: true,
+    //         url: "/dashboard/communities",
+    //         icon: MessageCircleHeart,
+    //         isActive: path === "/dashboard/communities",
+    //         items: [],
+    //     });
+    // }
     if (checkPermission(profile.permissions!, [permissions.publishCourse])) {
         navMainItems.push({
             title: SIDEBAR_MENU_BLOGS,
@@ -187,17 +168,18 @@ function getSidebarItems({
             items: [],
         });
     }
-    if (profile.permissions!.includes(permissions.manageSite)) {
-        navMainItems.push({
-            title: SIDEBAR_MENU_PAGES,
-            url: "/dashboard/pages",
-            icon: Globe,
-            isActive:
-                path === "/dashboard/pages" ||
-                path?.startsWith("/dashboard/page"),
-            items: [],
-        });
-    }
+    // Pages menu entry commented out for this project
+    // if (profile.permissions!.includes(permissions.manageSite)) {
+    //     navMainItems.push({
+    //         title: SIDEBAR_MENU_PAGES,
+    //         url: "/dashboard/pages",
+    //         icon: Globe,
+    //         isActive:
+    //             path === "/dashboard/pages" ||
+    //             path?.startsWith("/dashboard/page"),
+    //         items: [],
+    //     });
+    // }
     if (profile.permissions!.includes(permissions.manageUsers)) {
         navMainItems.push({
             title: SIDEBAR_MENU_USERS,
@@ -217,31 +199,32 @@ function getSidebarItems({
                 },
             ],
         });
-        navMainItems.push({
-            title: SIDEBAR_MENU_MAILS,
-            beta: true,
-            url: "#",
-            icon: Mail,
-            isActive:
-                path?.startsWith("/dashboard/mails") ||
-                path?.startsWith("/dashboard/mail"),
-            items: [
-                {
-                    title: "Broadcasts",
-                    url: "/dashboard/mails?tab=Broadcasts",
-                    isActive:
-                        `${path}?tab=${tab}` ===
-                        "/dashboard/mails?tab=Broadcasts",
-                },
-                {
-                    title: "Sequences",
-                    url: "/dashboard/mails?tab=Sequences",
-                    isActive:
-                        `${path}?tab=${tab}` ===
-                        "/dashboard/mails?tab=Sequences",
-                },
-            ],
-        });
+        // Mails menu entry commented out for this project
+        // navMainItems.push({
+        //     title: SIDEBAR_MENU_MAILS,
+        //     beta: true,
+        //     url: "#",
+        //     icon: Mail,
+        //     isActive:
+        //         path?.startsWith("/dashboard/mails") ||
+        //         path?.startsWith("/dashboard/mail"),
+        //     items: [
+        //         {
+        //             title: "Broadcasts",
+        //             url: "/dashboard/mails?tab=Broadcasts",
+        //             isActive:
+        //                 `${path}?tab=${tab}` ===
+        //                 "/dashboard/mails?tab=Broadcasts",
+        //         },
+        //         {
+        //             title: "Sequences",
+        //             url: "/dashboard/mails?tab=Sequences",
+        //             isActive:
+        //                 `${path}?tab=${tab}` ===
+        //                 "/dashboard/mails?tab=Sequences",
+        //         },
+        //     ],
+        // });
     }
     if (profile.permissions!.includes(permissions.manageSettings)) {
         const items = [
@@ -252,34 +235,38 @@ function getSidebarItems({
                     `${path}?tab=${tab}` ===
                     `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_GENERAL}`,
             },
-            {
-                title: SITE_SETTINGS_SECTION_PAYMENT,
-                url: `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_PAYMENT}`,
-                isActive:
-                    `${path}?tab=${tab}` ===
-                    `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_PAYMENT}`,
-            },
-            {
-                title: SITE_SETTINGS_SECTION_MAILS,
-                url: `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_MAILS}`,
-                isActive:
-                    `${path}?tab=${tab}` ===
-                    `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_MAILS}`,
-            },
-            {
-                title: SITE_CUSTOMISATIONS_SETTING_HEADER,
-                url: `/dashboard/settings?tab=${encodeURIComponent(SITE_CUSTOMISATIONS_SETTING_HEADER)}`,
-                isActive:
-                    `${path}?tab=${tab}` ===
-                    `/dashboard/settings?tab=${SITE_CUSTOMISATIONS_SETTING_HEADER}`,
-            },
-            {
-                title: SITE_MISCELLANEOUS_SETTING_HEADER,
-                url: `/dashboard/settings?tab=${SITE_MISCELLANEOUS_SETTING_HEADER}`,
-                isActive:
-                    `${path}?tab=${tab}` ===
-                    `/dashboard/settings?tab=${SITE_MISCELLANEOUS_SETTING_HEADER}`,
-            },
+            // Payment settings commented out for this project
+            // {
+            //     title: SITE_SETTINGS_SECTION_PAYMENT,
+            //     url: `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_PAYMENT}`,
+            //     isActive:
+            //         `${path}?tab=${tab}` ===
+            //         `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_PAYMENT}`,
+            // },
+            // Mails settings commented out for this project
+            // {
+            //     title: SITE_SETTINGS_SECTION_MAILS,
+            //     url: `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_MAILS}`,
+            //     isActive:
+            //         `${path}?tab=${tab}` ===
+            //         `/dashboard/settings?tab=${SITE_SETTINGS_SECTION_MAILS}`,
+            // },
+            // Code Injection settings commented out for this project
+            // {
+            //     title: SITE_CUSTOMISATIONS_SETTING_HEADER,
+            //     url: `/dashboard/settings?tab=${encodeURIComponent(SITE_CUSTOMISATIONS_SETTING_HEADER)}`,
+            //     isActive:
+            //         `${path}?tab=${tab}` ===
+            //         `/dashboard/settings?tab=${SITE_CUSTOMISATIONS_SETTING_HEADER}`,
+            // },
+            // Miscellaneous settings commented out for this project
+            // {
+            //     title: SITE_MISCELLANEOUS_SETTING_HEADER,
+            //     url: `/dashboard/settings?tab=${SITE_MISCELLANEOUS_SETTING_HEADER}`,
+            //     isActive:
+            //         `${path}?tab=${tab}` ===
+            //         `/dashboard/settings?tab=${SITE_MISCELLANEOUS_SETTING_HEADER}`,
+            // },
         ];
         navMainItems.push({
             title: SIDEBAR_MENU_SETTINGS,
@@ -291,35 +278,35 @@ function getSidebarItems({
     }
 
     const navSecondaryItems: any[] = [];
-    if (
-        profile &&
-        profile.permissions &&
-        checkPermission(profile.permissions, ADMIN_PERMISSIONS)
-    ) {
-        if (totalChecklistItems && checklist.length) {
-            navSecondaryItems.push({
-                title: GET_SET_UP,
-                url: "/dashboard/get-set-up",
-                icon: (
-                    <CircularProgress
-                        strokeWidth={4}
-                        value={
-                            ((totalChecklistItems - checklist.length) /
-                                totalChecklistItems) *
-                            100
-                        }
-                    />
-                ),
-                isActive: path === "/dashboard/get-set-up",
-            });
-        }
-        navSecondaryItems.push({
-            title: "Support",
-            url: "/dashboard/support",
-            icon: <LifeBuoy />,
-            isActive: path === "/dashboard/support",
-        });
-    }
+    // "Get set up" and "Support" menu entries commented out for this project
+    // if (
+    //     profile &&
+    //     profile.permissions &&
+    //     checkPermission(profile.permissions, ADMIN_PERMISSIONS)
+    // ) {
+    //     if (totalChecklistItems && checklist.length) {
+    //         navSecondaryItems.push({
+    //             title: GET_SET_UP,
+    //             url: "/dashboard/get-set-up",
+    //             icon: (
+    //                 <CircularProgress
+    //                     strokeWidth={4}
+    //                     value={
+    //                         ((totalChecklistItems - checklist.length) /
+    //                             totalChecklistItems) *
+    //                         100
+    //                     }
+    //                 ),
+    //             isActive: path === "/dashboard/get-set-up",
+    //         });
+    //     }
+    //     navSecondaryItems.push({
+    //         title: "Support",
+    //         url: "/dashboard/support",
+    //         icon: <LifeBuoy />,
+    //         isActive: path === "/dashboard/support",
+    //     });
+    // }
     const navProjectItems = [
         {
             name: MY_CONTENT_HEADER,

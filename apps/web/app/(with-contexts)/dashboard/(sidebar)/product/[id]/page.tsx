@@ -57,7 +57,6 @@ import { useActivities } from "@/hooks/use-activities";
 import { Constants, UIConstants } from "@courselit/common-models";
 import Resources from "@components/resources";
 import { TIME_RANGES } from "@ui-config/constants";
-import SalesCard from "../../overview/sales-card";
 const { permissions } = UIConstants;
 
 const { ActivityType } = Constants;
@@ -356,7 +355,8 @@ export default function DashboardPage() {
                 )}
             </div>
 
-            <SalesCard data={salesData} loading={salesLoading} />
+            {/* Product-level sales chart hidden for this project */}
+            {/* <SalesCard data={salesData} loading={salesLoading} /> */}
 
             {/* <div className="mt-4">
                 <Card>

@@ -25,6 +25,10 @@ const nextConfig = {
     ],
     serverExternalPackages: ["pug", "liquidjs", "mongoose", "mongodb"],
     experimental: {},
+    // Disable Next.js dev indicator (the "N" button) in development
+    devIndicators: {
+        buildActivity: false,
+    },
 };
 
 module.exports = nextConfig;

@@ -122,3 +122,12 @@
         outline: none;
     }
 }
+
+/* Hide Next.js dev tools indicator (the "N" button) */
+#nextjs-toast,
+#devtools-indicator,
+button#next-logo,
+[data-next-mark],
+nextjs-portal {
+    display: none !important;
+}

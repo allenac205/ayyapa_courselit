@@ -128,7 +128,8 @@ export default function Page() {
                     duration={timeRange}
                 />
             </div>
-            <SalesCard data={salesData} loading={salesLoading} />
+            {/* Overview sales chart hidden for this project */}
+            {/* <SalesCard data={salesData} loading={salesLoading} /> */}
         </DashboardContent>
     );
 }

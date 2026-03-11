@@ -153,7 +153,8 @@ export default function Page() {
                     )}
                 </section>
 
-                <section>
+                {/* My Communities section commented out for this project */}
+                {/* <section>
                     <h2 className="text-xl font-semibold mb-6">
                         My Communities
                     </h2>
@@ -167,7 +168,7 @@ export default function Page() {
                     ) : (
                         <EmptyStateMessage type="community" />
                     )}
-                </section>
+                </section> */}
             </div>
         </DashboardContent>
     );
