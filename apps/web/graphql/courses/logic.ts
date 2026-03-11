@@ -207,6 +207,16 @@ export const updateCourse = async (
     courseData: Partial<InternalCourse & { id: string }>,
     ctx: GQLContext,
 ) => {
+    // Ensure that when a course is being published, we also mark its privacy
+    // as PUBLIC unless the caller explicitly chose a different privacy.
+    if (
+        Object.prototype.hasOwnProperty.call(courseData, "published") &&
+        courseData.published === true &&
+        !Object.prototype.hasOwnProperty.call(courseData, "privacy")
+    ) {
+        courseData.privacy = Constants.ProductAccessType.PUBLIC;
+    }
+
     let course = await getCourseOrThrow(undefined, ctx, courseData.id);
 
     const mediaIdsMarkedForDeletion: string[] = [];

@@ -2,11 +2,6 @@ import { APIError, betterAuth } from "better-auth";
 import { customSession, emailOTP } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 import DomainModel, { Domain } from "@models/Domain";
-import { addMailJob } from "@/services/queue";
-import pug from "pug";
-import MagicCodeEmailTemplate from "@/templates/magic-code-email";
-import { generateEmailFrom } from "@/lib/utils";
-import { responses } from "@/config/strings";
 import { mongodbAdapter } from "@/ba-multitenant-adapter";
 import { updateUserAfterCreationViaAuth } from "./graphql/users/logic";
 import UserModel from "@models/User";
@@ -38,31 +33,14 @@ const config: any = {
         emailOTP({
             overrideDefaultEmailVerification: true,
             storeOTP: "hashed",
-            async sendVerificationOTP({ email, otp, type }, ctx) {
-                const emailBody = pug.render(MagicCodeEmailTemplate, {
-                    code: otp,
-                    hideCourseLitBranding: ctx!.headers?.get(
-                        "hidecourselitbranding",
-                    )
-                        ? ctx!.headers?.get("hidecourselitbranding") === "true"
-                        : false,
-                });
-
-                await addMailJob({
-                    to: [email],
-                    subject: `${responses.sign_in_mail_prefix} ${ctx!.headers?.get("host")}`,
-                    body: emailBody,
-                    from: generateEmailFrom({
-                        name:
-                            ctx!.headers?.get("domaintitle") ||
-                            ctx!.headers?.get("domain") ||
-                            "",
-                        email:
-                            process.env.EMAIL_FROM ||
-                            ctx!.headers?.get("domainemail") ||
-                            "",
-                    }),
-                });
+            async sendVerificationOTP({ email, otp, type }) {
+                // College project behaviour: always log OTP to terminal instead
+                // of sending real emails. We deliberately avoid email delivery
+                // so setup is simple (no SMTP or queue service required).
+                // eslint-disable-next-line no-console
+                console.warn(
+                    `[otp] Email OTP for ${email} (type=${type}): ${otp}`,
+                );
             },
         }),
         customSession(async ({ user, session }, ctx) => {
