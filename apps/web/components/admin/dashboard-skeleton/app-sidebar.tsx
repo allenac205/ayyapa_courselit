@@ -21,6 +21,7 @@ import { ProfileContext, SiteInfoContext } from "@components/contexts";
 import { checkPermission } from "@courselit/utils";
 import { Profile, UIConstants } from "@courselit/common-models";
 import {
+    AI_DASHBOARD_HEADER,
     MY_CONTENT_HEADER,
     SIDEBAR_MENU_BLOGS,
     SIDEBAR_MENU_SETTINGS,
@@ -313,6 +314,12 @@ function getSidebarItems({
             url: "/dashboard/my-content",
             icon: LibraryBig,
             isActive: path === "/dashboard/my-content",
+        },
+        {
+            name: AI_DASHBOARD_HEADER,
+            url: "/dashboard/ai",
+            icon: LibraryBig,
+            isActive: path === "/dashboard/ai",
         },
     ];
 
