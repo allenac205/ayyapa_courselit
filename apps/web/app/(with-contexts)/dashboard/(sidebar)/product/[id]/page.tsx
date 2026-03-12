@@ -11,10 +11,7 @@ import {
     Download,
     BookOpen,
     ChevronDown,
-    Eye,
-    Globe,
     Settings,
-    UserPlus,
     Share2,
 } from "lucide-react";
 import Link from "next/link";
@@ -31,19 +28,15 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 import {
     EDIT_CONTENT_MENU_ITEM,
-    EDIT_PAGE_MENU_ITEM,
     MANAGE_COURSES_PAGE_HEADING,
     PRODUCT_EMPTY_WARNING,
-    PRODUCT_TABLE_CONTEXT_MENU_INVITE_A_CUSTOMER,
     PRODUCT_UNPUBLISHED_WARNING,
     MANAGE_LINK_TEXT,
     TOAST_TITLE_SUCCESS,
-    VIEW_PAGE_MENU_ITEM,
 } from "@ui-config/strings";
 import DashboardContent from "@components/admin/dashboard-content";
 import { AddressContext, SiteInfoContext } from "@components/contexts";
@@ -198,7 +191,7 @@ export default function DashboardPage() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem asChild>
+                                {/* <DropdownMenuItem asChild>
                                     <a
                                         href={`/p/${encodeURIComponent(product?.pageId!)}`}
                                         target="_blank"
@@ -220,7 +213,7 @@ export default function DashboardPage() {
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                {/* <DropdownMenuItem asChild>
+                                <DropdownMenuItem asChild>
                                     <Link
                                         href={`/dashboard/product/${productId}/content`}
                                     >
@@ -228,14 +221,14 @@ export default function DashboardPage() {
                                         {EDIT_CONTENT_MENU_ITEM}
                                     </Link>
                                 </DropdownMenuItem> */}
-                                <DropdownMenuItem asChild>
+                                {/* <DropdownMenuItem asChild>
                                     <Link
                                         href={`/dashboard/page/${product?.pageId}?redirectTo=/dashboard/product/${product?.courseId}`}
                                     >
                                         <Globe className="mr-2 h-4 w-4" />
                                         {EDIT_PAGE_MENU_ITEM}
                                     </Link>
-                                </DropdownMenuItem>
+                                </DropdownMenuItem> */}
                                 <DropdownMenuItem asChild>
                                     <Link
                                         href={`/dashboard/product/${productId}/manage`}
