@@ -310,8 +310,9 @@ export const HEADER_YOUR_PROFILE = "Your Profile";
 export const PROFILE_PAGE_MESSAGE_NOT_LOGGED_IN = "to see your profile.";
 export const PROFILE_PAGE_HEADER = "Profile";
 export const MY_CONTENT_HEADER = "My content";
-export const AI_DASHBOARD_HEADER = "AI";
+export const AI_DASHBOARD_HEADER = "AI Guide";
 export const CREATIVE_LEARNING_HEADER = "Creative learning";
+export const AI_QUIZ_HEADER = "AI Quiz";
 export const NOTIFICATION_SETTINGS_PAGE_HEADER = "Notifications";
 export const NOTIFICATION_SETTINGS_PAGE_DESCRIPTION =
     "Manage how you receive notifications for each activity.";

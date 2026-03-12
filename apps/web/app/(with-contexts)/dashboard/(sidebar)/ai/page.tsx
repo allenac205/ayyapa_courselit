@@ -196,16 +196,21 @@ export default function Page() {
                     This page summarizes your learning journey and prepares data
                     for future AI-powered suggestions.
                 </p>
-                {isLoading && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        <span>Talking to AI engine…</span>
-                    </div>
-                )}
                 {error && !isLoading && (
                     <p className="text-sm text-destructive">{error}</p>
                 )}
             </div>
+
+            {isLoading && !suggestions && (
+                <div className="mt-10 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4 rounded-3xl border border-border bg-card/70 px-8 py-10">
+                        <div className="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                        <p className="text-sm text-muted-foreground">
+                            Talking to AI engine to analyze your learning…
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {suggestions && !isLoading && (
                 <div className="mt-6 space-y-8">

@@ -22,6 +22,7 @@ import { checkPermission } from "@courselit/utils";
 import { Profile, UIConstants } from "@courselit/common-models";
 import {
     AI_DASHBOARD_HEADER,
+    AI_QUIZ_HEADER,
     MY_CONTENT_HEADER,
     SIDEBAR_MENU_BLOGS,
     SIDEBAR_MENU_SETTINGS,
@@ -320,6 +321,12 @@ function getSidebarItems({
             url: "/dashboard/ai",
             icon: LibraryBig,
             isActive: path === "/dashboard/ai",
+        },
+        {
+            name: AI_QUIZ_HEADER,
+            url: "/dashboard/ai-quiz",
+            icon: Target,
+            isActive: path === "/dashboard/ai-quiz",
         },
     ];
 
