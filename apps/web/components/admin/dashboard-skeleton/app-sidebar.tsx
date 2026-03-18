@@ -309,26 +309,39 @@ function getSidebarItems({
     //         isActive: path === "/dashboard/support",
     //     });
     // }
-    const navProjectItems = [
-        {
-            name: MY_CONTENT_HEADER,
-            url: "/dashboard/my-content",
-            icon: LibraryBig,
-            isActive: path === "/dashboard/my-content",
-        },
-        {
-            name: AI_DASHBOARD_HEADER,
-            url: "/dashboard/ai",
-            icon: LibraryBig,
-            isActive: path === "/dashboard/ai",
-        },
-        {
-            name: AI_QUIZ_HEADER,
-            url: "/dashboard/ai-quiz",
-            icon: Target,
-            isActive: path === "/dashboard/ai-quiz",
-        },
-    ];
+
+    // Show student-focused project nav items (My content, AI Guide, AI Quiz)
+    // only for audience users (who can enroll in courses) and hide them for
+    // admin/creator users (who manage courses).
+    const isStudentOnly =
+        checkPermission(profile.permissions!, [permissions.enrollInCourse]) &&
+        !checkPermission(profile.permissions!, [
+            permissions.manageCourse,
+            permissions.manageAnyCourse,
+        ]);
+
+    const navProjectItems = isStudentOnly
+        ? [
+              {
+                  name: MY_CONTENT_HEADER,
+                  url: "/dashboard/my-content",
+                  icon: LibraryBig,
+                  isActive: path === "/dashboard/my-content",
+              },
+              {
+                  name: AI_DASHBOARD_HEADER,
+                  url: "/dashboard/ai",
+                  icon: LibraryBig,
+                  isActive: path === "/dashboard/ai",
+              },
+              {
+                  name: AI_QUIZ_HEADER,
+                  url: "/dashboard/ai-quiz",
+                  icon: Target,
+                  isActive: path === "/dashboard/ai-quiz",
+              },
+          ]
+        : [];
 
     return { navMainItems, navSecondaryItems, navProjectItems };
 }

@@ -1,6 +1,6 @@
 const LEARNING_SUGGESTIONS_API_URL =
     process.env.LEARNING_SUGGESTIONS_API_URL ??
-    "http://localhost:8000/learning-suggestions";
+    "http://3.108.188.88:8002/learning-suggestions";
 
 export async function POST(request: Request) {
     const body = await request.json();

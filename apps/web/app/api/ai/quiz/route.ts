@@ -1,5 +1,5 @@
 const AI_QUIZ_API_URL =
-    process.env.AI_QUIZ_API_URL ?? "http://localhost:8000/ai-quiz";
+    process.env.AI_QUIZ_API_URL ?? "http://3.108.188.88:8002/ai-quiz";
 
 export async function POST(request: Request) {
     const body = await request.json();

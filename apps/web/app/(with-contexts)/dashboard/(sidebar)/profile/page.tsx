@@ -7,19 +7,11 @@ import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-    Checkbox,
     Image,
     MediaSelector,
     useToast,
 } from "@courselit/components-library";
-import {
-    Field,
-    FieldContent,
-    FieldGroup,
-    FieldLabel,
-    FieldLegend,
-    FieldSet,
-} from "@components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@components/ui/field";
 import { FetchBuilder } from "@courselit/utils";
 import { MIMETYPE_IMAGE } from "@ui-config/constants";
 import {
@@ -28,8 +20,7 @@ import {
     TOAST_TITLE_ERROR,
     MEDIA_SELECTOR_REMOVE_BTN_CAPTION,
     MEDIA_SELECTOR_UPLOAD_BTN_CAPTION,
-    PROFILE_EMAIL_PREFERENCES,
-    PROFILE_EMAIL_PREFERENCES_NEWSLETTER_OPTION_TEXT,
+    ENROLLED_COURSES_HEADER,
     PROFILE_PAGE_HEADER,
     PROFILE_SECTION_DETAILS,
     PROFILE_SECTION_DETAILS_BIO,
@@ -42,8 +33,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Input } from "@components/ui/input";
 import { Textarea } from "@components/ui/textarea";
 import { Button } from "@components/ui/button";
+import type { ContentItem } from "@/components/admin/my-content/content";
+import { ProgressBar } from "@components/admin/my-content/progress-bar";
 
 const breadcrumbs = [{ label: PROFILE_PAGE_HEADER, href: "#" }];
+
+type UserCourse = {
+    id: string;
+    title: string;
+    slug?: string;
+    type: string;
+    totalLessons: number;
+    completedLessons: number;
+    completionPercentage: number;
+    imageUrl?: string;
+};
 
 export default function Page() {
     const [bio, setBio] = useState("");
@@ -61,6 +65,8 @@ export default function Page() {
 
     const { profile, setProfile } = useContext(ProfileContext);
     const address = useContext(AddressContext);
+    const [courses, setCourses] = useState<UserCourse[]>([]);
+    const [coursesLoading, setCoursesLoading] = useState(false);
 
     useEffect(() => {
         const getUser = async function (userId: string) {
@@ -115,6 +121,82 @@ export default function Page() {
             getUser(profile.userId);
         }
     }, [profile, address.backend]);
+
+    useEffect(() => {
+        if (!profile || !address.backend) {
+            return;
+        }
+
+        const loadCourses = async () => {
+            setCoursesLoading(true);
+
+            const query = `
+                query {
+                    content: getUserContent {
+                        entityType
+                        entity {
+                            id
+                            title
+                            slug
+                            totalLessons
+                            completedLessonsCount
+                            featuredImage {
+                                thumbnail
+                            }
+                            type
+                        }
+                    }
+                }
+            `;
+
+            try {
+                const gqlFetch = new FetchBuilder()
+                    .setUrl(`${address.backend}/api/graph`)
+                    .setPayload(query)
+                    .setIsGraphQLEndpoint(true)
+                    .build();
+
+                const response = await gqlFetch.exec();
+
+                if (!response.content) {
+                    setCourses([]);
+                    setCoursesLoading(false);
+                    return;
+                }
+
+                const items = (response.content as ContentItem[]).map(
+                    (item) => {
+                        const totalLessons = item.entity.totalLessons || 0;
+                        const completed =
+                            item.entity.completedLessonsCount || 0;
+                        const completionPercentage =
+                            totalLessons > 0
+                                ? Math.round((completed / totalLessons) * 100)
+                                : 0;
+
+                        return {
+                            id: item.entity.id,
+                            title: item.entity.title,
+                            slug: item.entity.slug,
+                            type: item.entityType.toLowerCase(),
+                            totalLessons,
+                            completedLessons: completed,
+                            completionPercentage,
+                            imageUrl: item.entity.featuredImage?.thumbnail,
+                        } as UserCourse;
+                    },
+                );
+
+                setCourses(items.filter((item) => item.type === "course"));
+            } catch {
+                setCourses([]);
+            } finally {
+                setCoursesLoading(false);
+            }
+        };
+
+        loadCourses();
+    }, [address.backend, profile]);
 
     const updateProfilePic = async (media?: Media) => {
         const mutation = `
@@ -384,7 +466,7 @@ export default function Page() {
                     </form>
                 </Card>
             </div>
-            <Card className="mt-4">
+            {/* <Card className="mt-4">
                 <CardHeader>
                     <CardTitle>{PROFILE_EMAIL_PREFERENCES}</CardTitle>
                 </CardHeader>
@@ -414,6 +496,59 @@ export default function Page() {
                             </Field>
                         </FieldGroup>
                     </FieldSet>
+                </CardContent>
+            </Card> */}
+            <Card className="mt-4">
+                <CardHeader>
+                    <CardTitle>{ENROLLED_COURSES_HEADER}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {coursesLoading ? (
+                        <div className="space-y-3">
+                            <div className="h-16 rounded-lg bg-muted/60 animate-pulse" />
+                            <div className="h-16 rounded-lg bg-muted/60 animate-pulse" />
+                        </div>
+                    ) : courses.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                            You haven&apos;t enrolled in any courses yet. Your
+                            learning progress will appear here.
+                        </p>
+                    ) : (
+                        <div className="space-y-3">
+                            {courses.map((course) => (
+                                <div
+                                    key={course.id}
+                                    className="flex gap-3 rounded-xl border border-border/80 bg-card/70 p-3"
+                                >
+                                    {course.imageUrl && (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={course.imageUrl}
+                                            alt={course.title}
+                                            className="h-14 w-20 rounded-md object-cover border border-border/60"
+                                        />
+                                    )}
+                                    <div className="flex-1 space-y-1">
+                                        <p className="text-sm font-medium text-foreground line-clamp-2">
+                                            {course.title}
+                                        </p>
+                                        <div className="flex items-center justify-between text-[0.7rem] text-muted-foreground">
+                                            <span>
+                                                {course.completedLessons}/
+                                                {course.totalLessons} lessons
+                                            </span>
+                                            <span className="font-semibold text-primary">
+                                                {course.completionPercentage}%
+                                            </span>
+                                        </div>
+                                        <ProgressBar
+                                            value={course.completionPercentage}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </DashboardContent>
